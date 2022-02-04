@@ -39,7 +39,7 @@ app.add_middleware(
 async def root():
     return {
         "title": site_name,
-        "services": "http://127.0.0.1:8000/services",
+        "services": domain_api + "services",
     }
 
 @app.get("/services")
