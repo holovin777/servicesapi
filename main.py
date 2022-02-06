@@ -5,7 +5,7 @@ import json
 
 if not os.path.isfile("conf.json"):
     site_name = input("Enter your site name: ")
-    path_to_services = input("Enter your folder with services (ex. /home/admin/My\ Services/): ")
+    path_to_services = input("Enter your folder with services (ex. /home/admin/My Services/): ")
     domain_api = input("Domain name for api (ex. https://88:88:88:88/): ")
     site_conf = { "path_to_services": path_to_services, "domain_api": domain_api, "site_name": site_name }
     with open("conf.json", "w") as conf_file:
@@ -37,32 +37,26 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
+    nav_bar_items_list = os.listdir(path_to_services)
+    nav_bar_item = {}
+    nav_bar_items = []
+    i = 0
+    while i < len(nav_bar_items_list):
+        ui_url = "/" + nav_bar_items_list[i].lower()
+        nav_bar_items.append({"id": i, "title": nav_bar_items_list[i], "ui_url": ui_url})
+        i += 1
     return {
         "title": site_name,
-        "services": domain_api + "services",
+        "items": nav_bar_items,
     }
 
 @app.get("/services")
 async def services_list():
-    return [
-        {
-            "id": 0,
-            "text": "Testing first message.",
-        },
-        {
-            "id": 1,
-            "text": "Testing second message.",
-        },
-        {
-            "id": 2,
-            "text": "Testing third message.",
-        },
-        {
-            "id": 3,
-            "text": "Testing fourth message.",
-        },
-    ]
-
-@app.get("/services/{service_id}")
-async def read_service(service_id):
-    return {"service_id": service_id}
+    services_list = os.listdir(path_to_services + "Services/")
+    service = {}
+    services = []
+    i = 0
+    while i < len(services_list):
+        services.append({"id": i, "text": services_list[i]})
+        i += 1
+    return services
