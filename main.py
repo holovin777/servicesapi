@@ -43,7 +43,8 @@ async def root():
     i = 0
     while i < len(nav_bar_items_list):
         ui_url = "/" + nav_bar_items_list[i].lower()
-        nav_bar_items.append({"id": i, "title": nav_bar_items_list[i], "ui_url": ui_url})
+        if nav_bar_items_list[i].startswith(".") == False:
+            nav_bar_items.append({"id": i, "title": nav_bar_items_list[i], "ui_url": ui_url})
         i += 1
     return {
         "title": site_name,
@@ -60,3 +61,14 @@ async def services_list():
         services.append({"id": i, "text": services_list[i]})
         i += 1
     return services
+
+@app.get("/contacts")
+async def contacts_list():
+    contacts_list = os.listdir(path_to_services + "Contacts/")
+    contacts = []
+    i = 0
+    while i < len(contacts_list):
+        contact = {"id": i, "text": contacts_list[i]}
+        contacts.append(contact)
+        i += 1
+    return contacts
