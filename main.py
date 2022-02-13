@@ -42,9 +42,9 @@ async def root():
     nav_bar_items = []
     i = 0
     while i < len(nav_bar_items_list):
-        ui_url = "/" + nav_bar_items_list[i].lower()
+        url = "/" + nav_bar_items_list[i].lower()
         if nav_bar_items_list[i].startswith(".") == False:
-            nav_bar_items.append({"id": i, "title": nav_bar_items_list[i], "ui_url": ui_url})
+            nav_bar_items.append({"id": i, "title": nav_bar_items_list[i], "url": url})
         i += 1
     return {
         "title": site_name,
