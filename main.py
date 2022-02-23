@@ -51,24 +51,12 @@ async def root():
         "items": nav_bar_items,
     }
 
-@app.get("/services")
-async def services_list():
-    services_list = os.listdir(path_to_services + "Services/")
-    service = {}
-    services = []
+@app.get("/{item}")
+async def items_list(item):
+    items_list = os.listdir(path_to_services + item)
+    items = []
     i = 0
-    while i < len(services_list):
-        services.append({"id": i, "text": services_list[i]})
+    while i < len(items_list):
+        items.append({"id": i, "text": items_list[i]})
         i += 1
-    return services
-
-@app.get("/contacts")
-async def contacts_list():
-    contacts_list = os.listdir(path_to_services + "Contacts/")
-    contacts = []
-    i = 0
-    while i < len(contacts_list):
-        contact = {"id": i, "text": contacts_list[i]}
-        contacts.append(contact)
-        i += 1
-    return contacts
+    return items
