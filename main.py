@@ -1,25 +1,39 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
+from bot import *
+from pydantic import BaseModel
+
+class Message(BaseModel):
+    phone: str
+    description: str | None = None
+
+app = FastAPI()
 
 if not os.path.isfile("conf.json"):
     site_name = input("Enter your site name: ")
     path_to_services = input("Enter your folder with services (ex. /home/admin/My Services/): ")
     domain_api = input("Domain name for api (ex. https://88:88:88:88/): ")
-    site_conf = { "path_to_services": path_to_services, "domain_api": domain_api, "site_name": site_name }
+    BOT_TOKEN = input("Enter your telegram bot token: ")
+    chat_id = input("Enter your private chat id: ")
+    site_conf = { "path_to_services": path_to_services, "domain_api": domain_api, "site_name": site_name, "BOT_TOKEN": BOT_TOKEN, "chat_id": chat_id }
     with open("conf.json", "w") as conf_file:
         json.dump(site_conf, conf_file)
 
 path_to_services = ""
 domain_api = ""
 site_name = ""
+BOT_TOKEN = ""
+chat_id = ""
 
 with open("conf.json", "r") as conf_file:
     site_conf = json.load(conf_file)
     domain_api = site_conf["domain_api"]
     path_to_services = site_conf["path_to_services"]
     site_name = site_conf["site_name"]
+    BOT_TOKEN = site_conf["BOT_TOKEN"]
+    chat_id = site_conf["chat_id"]
 
 app = FastAPI()
 
@@ -50,6 +64,11 @@ async def root():
         "title": site_name,
         "items": nav_bar_items,
     }
+
+@app.post("/form")
+async def message(message: Message):
+    send_message(BOT_TOKEN, chat_id, message)
+    return message
 
 @app.get("/{item}")
 async def items_list(item):
